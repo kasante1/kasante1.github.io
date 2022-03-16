@@ -2,9 +2,11 @@ div {
     text-align: justify;
     padding: 5%;
     font-size: larger;
+    font-family:  "Courier New","Lucida Console", monospace;
   }
 a{
     color:black;
     text-decoration:underline ;
+    font-family:  "Courier New","Lucida Console", monospace;
 
 }

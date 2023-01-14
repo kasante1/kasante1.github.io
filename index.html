@@ -3,24 +3,47 @@
 <head>
     <link rel="stylesheet" href="index.css">
     <meta charset="UTF-8">
+     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body>
-<div class="nav">
-    <a id="up"></a> FORWARD | 
-    <a href="#projects">Projects</a>
-    <a href="#publication">Publications</a>
-    <a href="#wip">Works In Progress</a>
-    <a href="#hello">About</a>
-</div>
+
+ <header>
+
+  <div>
+      <a id="title"></a> FORWARD | 
+
+      <a id="nav" href="#projects">Projects</a>
+      <a id="nav"href="#publication">Publications</a>
+      <a id="nav" href="#wip">Works In Progress</a>
+      <a id="nav" href="#hello">About</a>
+
+  </div>
+ 
+      <div id="hamburger-icon" onclick="toggleMobileMenu(this)">
+        <div class="bar1"></div>
+        <div class="bar2"></div>
+        <div class="bar3"></div>
+        <ul class="mobile-menu">
+          <li><a href="#home">Home</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#publication">Publication</a></li>
+          <li><a href="#wip">Works In Progress</a></li>
+          <li><a href="#home">About</a></li>
+        </ul>
+      </div>
+    </header>
+    <script src="index.js"></script>
+  </header>
 <div>
+  <body>
+<br>
 <h2><a id="hello">Hello</a></h2>
 My name is Samuel. I am a software developer. I use Python, Dart + Flutter.
 <br>
 Currently, I build legal products and tools for legal research. 
 <br>
 <br>
-<h4>Contact:<h4/>
+<h4>Contact:</h4>
 dsasante1@gmail.com
 <br>
 <br>
@@ -91,7 +114,6 @@ Identify and Visualise differences between two or more text documents especially
 <br>
 <br>
 <br>
-
    Updated: 18/12/22 00:07:31            <a href="#top" class="top">TOP</a>
 </div>
 </body>

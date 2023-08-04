@@ -1,41 +1,54 @@
-*{
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-}
+  <div  id="outer-nav">
+    <span>
+      <a id="title" href = /index.html>FORWARD!</a>
+      <span id="inner-nav">
+        <a id="nav" href=/projects.html>Projects</a>
+        <a id="nav"href=/blog.html>Blogs</a>
+        <a id="nav" href=/wip.html>Works In Progress</a>
+      </span>
+    </span>
+  </div>
+
 
 
 html{
 
   scroll-behavior: smooth;
+
   background-color: #353836;
   color: white;
   font-family: "monospace";
-  text-align: justify;
-  padding: 50px;
-  font-size: larger;
-
 
 
 }
-
-
-#mobileHeader  {
-  display: none;
-}
-
 
 header {
   display: flex;
-  
   justify-content: space-between;
+  height: 70px;
 
-  
 }
 
 #hamburger-icon {
   display: none;
 }
+
+
+#outer-nav{
+  display: flex;
+  flex-direction: row;
+  justify-content:space-between;
+
+
+}
+
+
+#innerNav{
+  display: flex;
+  flex-direction: row;
+  justify-content:space-between;
+}
+
 
 
 .top{
@@ -50,35 +63,61 @@ header {
 #title {
   font-size: 30px;
   display: flex;
+  align-items: center;
   text-decoration: none;
 }
+
+
+div {
+    color: white;
+    text-align: justify;
+    padding: 5%;
+    font-size: larger;
+
+  }
 
 
 a{
     color:white;
 
+
 }
+
+
+
+*{
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+
 
 
 
 @media only screen and (max-width: 600px) {
 
-  #desktopHeader  {
+  header #innerNav  {
     display: none;
   }
 
-
-
-#mobileHeader {
-    display: flex;
-    justify-content: space-between;
-    height: 70px;
-  
+  #hamburger-icon {
+    display: block;
   }
+
+
+
+header {
+  display: flex;
+  justify-content: space-between;
+  height: 70px;
+
+}
 
 #title {
   font-size: 30px;
   display: flex;
+  align-items: center;
   text-decoration: none;
 }
 
@@ -104,7 +143,8 @@ ul li {
 
 
 #hamburger-icon {
-  display: block;
+  margin: auto 0;
+  display: none;
   cursor: pointer;
 }
 
@@ -140,7 +180,7 @@ ul li {
 .mobile-menu {
   display: none;
   position: absolute;
-  top: 100px;
+  top: 70px;
   left: 0;
   height: calc(100vh - 50px);
   width: 100%;

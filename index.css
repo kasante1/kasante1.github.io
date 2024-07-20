@@ -28,7 +28,7 @@ html{
 header {
   display: flex;
   
-  justify-content: space-between;
+  justify-content:space-evenly;
 
   
 }
@@ -61,7 +61,7 @@ a{
 
 
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 900px) {
 
   #desktopHeader  {
     display: none;
@@ -151,4 +151,28 @@ ul li {
   margin-bottom: 10px;
 }
 
+}
+
+
+@media only screen and (min-width: 900px) {
+
+  #desktopHeader  {
+    padding: 50px;
+  }
+  
+  #desktopHeader span a {
+    text-decoration: none;
+
+  }
+
+  #desktopHeader span a:hover {
+    text-decoration: underline;
+}
+
+  .body-section{
+    
+    margin: auto;
+    width: 50%;
+    
+  }
 }

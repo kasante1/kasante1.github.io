@@ -1,66 +1,159 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="index.css">
     <meta charset="UTF-8">
-     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FORWARD!</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #2b2b2b;
+            color: #e0e0e0;
+            line-height: 1.7;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            font-size: 1.2rem;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        header {
+            margin-bottom: 4rem;
+        }
+
+        .site-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            letter-spacing: 0.1em;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        nav {
+            border-bottom: 1px solid #404040;
+            padding-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        nav a {
+            color: #e0e0e0;
+            text-decoration: none;
+            margin-right: 1.5rem;
+        }
+
+        nav a:hover {
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        main {
+            margin: 4rem 0;
+        }
+
+        h1 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .intro {
+            margin-bottom: 3rem;
+            font-size: 1.4rem;
+        }
+
+        .contact {
+            margin-bottom: 2rem;
+            font-size: 1.3rem;
+        }
+
+        .contact div {
+            margin-bottom: 0.8rem;
+        }
+
+        a {
+            color: #e0e0e0;
+            text-decoration: none;
+            border-bottom: 1px solid #404040;
+        }
+
+        a:hover {
+            border-bottom-color: #e0e0e0;
+        }
+
+        .technologies {
+            margin: 2rem 0;
+        }
+
+        .tech-list {
+            color: #808080;
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        footer {
+            color: #808080;
+            font-size: 1rem;
+            margin-top: 4rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 1rem;
+            }
+
+            nav a {
+                display: block;
+                margin: 0.8rem 0;
+            }
+        }
+    </style>
 </head>
-
-<header id="mobileHeader">
-  <script src="index.js"></script>
-  <a id="title" href = /index.html>FORWARD!</a> 
-
-  <div id="hamburger-icon" onclick="toggleMobileMenu(this)">
-    <div class="bar1"></div>
-    <div class="bar2"></div>
-    <div class="bar3"></div>
-    <ul class="mobile-menu">
-      <li><a href=/index.html>Home</a></li>
-      <li><a href=/projects.html>Projects</a></li>
-      <li><a href=/blog.html>Blog</a></li>
-      <li><a href=/wip.html>Works In Progress</a></li>
-    </ul>
-  </div>
-
-</header>
-  
-
-<header id="desktopHeader">
-
-  <a id="title" href = /index.html>FORWARD!</a> 
-  <span>
-    <a href=/index.html>Home</a>
-    <a  href=/projects.html>Projects</a>
-    <a href=/blog.html>Blogs</a>
-    <a  href=/wip.html>Works In Progress</a>
-  </span>
-</header>
-
-
 <body>
-<br>
-<div class="body-section">
+    <header>
+        <div class="site-title">FORWARD!</div>
+        <nav>
+            <a href="#">Home</a>
+            <a href="#">Projects</a>
+            <a href="#">Blogs</a>
+            <a href="#">Works In Progress</a>
+        </nav>
+    </header>
 
-<h2><a id="about">Hello</a></h2>
-<br>
-My name is Samuel. I am a software developer.
-<br>
-<br>
-Contact: dsasante1@gmail.com
-<br>
-<br>
-Github: <a id="about" href="https://github.com/kasante1/" target="_blank" rel="noopener noreferrer">kasante1</a> | <a id="about" href="https://github.com/dsasante1/" target="_blank" rel="noopener noreferrer">dsasante1</a> 
-<br>
-<br>
-Python | Dart + Flutter | Typescript | Go
-<br>
-<br>
-learning: Elixir
-<br>
-<br>
-Updated: 21/07/24 19:43:20
-</div>
+    <main>
+        <section class="intro">
+            <h1>Hello</h1>
+            <div>My name is Samuel. I am a software developer.</div>
+        </section>
 
+        <section class="contact">
+            <div>
+                <a href="mailto:dsasante1@gmail.com">dsasante1@gmail.com</a>
+            </div>
+            <div>
+                <a href="https://github.com/kasante1">kasante1</a> / 
+                <a href="https://github.com/dsasante1">dsasante1</a>
+            </div>
+        </section>
+
+        <section class="technologies">
+            <div class="tech-list">Python • Dart + Flutter • Typescript • Go</div>
+            <div class="tech-list">learning: Elixir</div>
+        </section>
+    </main>
+
+    <footer>
+        Updated: 21/07/24 19:43:20
+    </footer>
 </body>
 </html>

@@ -1,67 +1,215 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="index.css">
     <meta charset="UTF-8">
-     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Works in Progress - FORWARD!</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #2b2b2b;
+            color: #e0e0e0;
+            line-height: 1.7;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            font-size: 1.2rem;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4rem;
+        }
+
+        .site-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            letter-spacing: 0.1em;
+            font-weight: 700;
+            text-decoration: none;
+            color: #e0e0e0;
+        }
+
+        nav {
+            position: relative;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        nav a {
+            color: #e0e0e0;
+            text-decoration: none;
+        }
+
+        nav a:hover {
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: #e0e0e0;
+            font-size: 2rem;
+            padding: 0;
+            line-height: 1;
+        }
+
+        main {
+            margin: 4rem 0;
+            border-top: 1px solid #404040;
+            padding-top: 4rem;
+        }
+
+        h1 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            font-weight: 700;
+        }
+
+        .project-item {
+            margin-bottom: 4rem;
+        }
+
+        .project-title {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+        }
+
+        .project-title a {
+            color: #e0e0e0;
+            text-decoration: none;
+            border-bottom: 1px solid #404040;
+        }
+
+        .project-title a:hover {
+            border-bottom-color: #e0e0e0;
+        }
+
+        .project-description {
+            color: #b0b0b0;
+            margin: 1rem 0;
+        }
+
+        footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid #404040;
+            color: #808080;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+        }
+
+        .top-link {
+            color: #808080;
+            text-decoration: none;
+        }
+
+        .top-link:hover {
+            color: #e0e0e0;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 1rem;
+            }
+
+            .hamburger {
+                display: block;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                right: 0;
+                flex-direction: column;
+                background-color: #2b2b2b;
+                padding: 1rem;
+                border: 1px solid #404040;
+                width: 200px;
+                gap: 1rem;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+        }
+    </style>
 </head>
+<body>
+    <div class="header-container">
+        <a href="/index.html" class="site-title">FORWARD!</a>
+        <nav>
+            <button class="hamburger">☰</button>
+            <div class="nav-links">
+                <a href="/index.html">Home</a>
+                <a href="/projects.html">Projects</a>
+                <a href="/blog.html">Blogs</a>
+                <a href="/wip.html">Works In Progress</a>
+            </div>
+        </nav>
+    </div>
 
-<header id="mobileHeader">
-  <script src="index.js"></script>
-  <a id="title" href = /index.html>FORWARD!</a> 
+    <main>
+        <h1>Works in Progress</h1>
 
-  <div id="hamburger-icon" onclick="toggleMobileMenu(this)">
-    <div class="bar1"></div>
-    <div class="bar2"></div>
-    <div class="bar3"></div>
-    <ul class="mobile-menu">
-      <li><a href=/index.html>Home</a></li>
-      <li><a href=/projects.html>Projects</a></li>
-      <li><a href=/blog.html>Blog</a></li>
-      <li><a href=/wip.html>Works In Progress</a></li>
-    </ul>
-  </div>
+        <div class="project-item">
+            <div class="project-title">
+                <a href="https://share.streamlit.io/kasante1/casesnetwork/main">Graph Visualization of Legal Precedent in Ghana</a>
+            </div>
+            <div class="project-description">
+                A Property graph of Superior Courts decided Cases of Ghana from 1992 to 2020. This is a work in progress!
+            </div>
+        </div>
 
-</header>
-  
+        <div class="project-item">
+            <div class="project-title">
+                <a href="https://kasante1-newdiffvisualizer-streamlit-app-mpp1rr.streamlit.app/">DifVisualiser</a>
+            </div>
+            <div class="project-description">
+                Identify and Visualise differences between two or more text documents especially Legal Statutes.
+            </div>
+        </div>
+    </main>
 
-<header id="desktopHeader">
+    <footer>
+        <div>Updated: 15/12/24 17:48:07</div>
+        <a href="#" class="top-link">TOP</a>
+    </footer>
 
-  <a id="title" href = /index.html>FORWARD!</a> 
-  <span>
-    <a href=/index.html>Home</a>
-    <a  href=/projects.html>Projects</a>
-    <a href=/blog.html>Blogs</a>
-    <a  href=/wip.html>Works In Progress</a>
-  </span>
-</header>
+    <script>
+        document.querySelector('.hamburger').addEventListener('click', function() {
+            document.querySelector('.nav-links').classList.toggle('active');
+        });
 
-
-  <body>
-    <div class="body-section">
-    <br>
-    <br>
-<h2><a id="wip">Works in Progress</a></h2>
-<br>
-<li>
-    <a href="https://share.streamlit.io/kasante1/casesnetwork/main">Graph Visualization of Legal Precedent in Ghana</a>
-    </li>
-    <br>
-     A Property graph of Superior Courts decided Cases of Ghana from 1992 to 2020. This is a work in progress!
-    <br>
-<br>
-<br>
-<li>
-    <a href="https://kasante1-newdiffvisualizer-streamlit-app-mpp1rr.streamlit.app/"> DifVisualiser</a>
-<br>
-<br>
-Identify and Visualise differences between two or more text documents especially Legal Statutes.
-<br>
-<br>
-<br>
-<br>
-Updated: 20/07/24 10:10:07           <a href="#wip" class="top">TOP</a>
-</div>
+        document.addEventListener('click', function(event) {
+            const nav = document.querySelector('nav');
+            const navLinks = document.querySelector('.nav-links');
+            if (!nav.contains(event.target) && navLinks.classList.contains('active')) {
+                navLinks.classList.remove('active');
+            }
+        });
+    </script>
 </body>
 </html>

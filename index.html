@@ -26,7 +26,10 @@
             -moz-osx-font-smoothing: grayscale;
         }
 
-        header {
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 4rem;
         }
 
@@ -34,14 +37,11 @@
             font-family: 'JetBrains Mono', monospace;
             font-size: 2rem;
             letter-spacing: 0.1em;
-            margin-bottom: 1.5rem;
             font-weight: 700;
         }
 
         nav {
-            border-bottom: 1px solid #404040;
-            padding-bottom: 1rem;
-            font-size: 1.3rem;
+            position: relative;
         }
 
         .nav-links {
@@ -64,12 +64,15 @@
             background: none;
             border: none;
             color: #e0e0e0;
-            font-size: 1.5rem;
-            padding: 0.5rem;
+            font-size: 2rem;
+            padding: 0;
+            line-height: 1;
         }
 
         main {
             margin: 4rem 0;
+            border-top: 1px solid #404040;
+            padding-top: 4rem;
         }
 
         h1 {
@@ -126,15 +129,8 @@
                 padding: 1rem;
             }
 
-            nav {
-                position: relative;
-                display: flex;
-                justify-content: flex-end;
-            }
-
             .hamburger {
                 display: block;
-                z-index: 2;
             }
 
             .nav-links {
@@ -157,7 +153,7 @@
     </style>
 </head>
 <body>
-    <header>
+    <div class="header-container">
         <div class="site-title">FORWARD!</div>
         <nav>
             <button class="hamburger">☰</button>
@@ -168,7 +164,7 @@
                 <a href="#">Works In Progress</a>
             </div>
         </nav>
-    </header>
+    </div>
 
     <main>
         <section class="intro">
@@ -192,16 +188,13 @@
         </section>
     </main>
 
-    <footer>
-        Updated: 21/07/24 19:43:20
-    </footer>
+ <div>Updated: 15/12/24 17:48:07</div>
 
     <script>
         document.querySelector('.hamburger').addEventListener('click', function() {
             document.querySelector('.nav-links').classList.toggle('active');
         });
 
-        // Close menu when clicking outside
         document.addEventListener('click', function(event) {
             const nav = document.querySelector('nav');
             const navLinks = document.querySelector('.nav-links');

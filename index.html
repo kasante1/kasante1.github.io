@@ -44,14 +44,28 @@
             font-size: 1.3rem;
         }
 
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
         nav a {
             color: #e0e0e0;
             text-decoration: none;
-            margin-right: 1.5rem;
         }
 
         nav a:hover {
             border-bottom: 1px solid #e0e0e0;
+        }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: #e0e0e0;
+            font-size: 1.5rem;
+            padding: 0.5rem;
         }
 
         main {
@@ -112,9 +126,32 @@
                 padding: 1rem;
             }
 
-            nav a {
+            nav {
+                position: relative;
+                display: flex;
+                justify-content: flex-end;
+            }
+
+            .hamburger {
                 display: block;
-                margin: 0.8rem 0;
+                z-index: 2;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                right: 0;
+                flex-direction: column;
+                background-color: #2b2b2b;
+                padding: 1rem;
+                border: 1px solid #404040;
+                width: 200px;
+                gap: 1rem;
+            }
+
+            .nav-links.active {
+                display: flex;
             }
         }
     </style>
@@ -123,10 +160,13 @@
     <header>
         <div class="site-title">FORWARD!</div>
         <nav>
-            <a href="#">Home</a>
-            <a href="#">Projects</a>
-            <a href="#">Blogs</a>
-            <a href="#">Works In Progress</a>
+            <button class="hamburger">☰</button>
+            <div class="nav-links">
+                <a href="#">Home</a>
+                <a href="#">Projects</a>
+                <a href="#">Blogs</a>
+                <a href="#">Works In Progress</a>
+            </div>
         </nav>
     </header>
 
@@ -155,5 +195,20 @@
     <footer>
         Updated: 21/07/24 19:43:20
     </footer>
+
+    <script>
+        document.querySelector('.hamburger').addEventListener('click', function() {
+            document.querySelector('.nav-links').classList.toggle('active');
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const nav = document.querySelector('nav');
+            const navLinks = document.querySelector('.nav-links');
+            if (!nav.contains(event.target) && navLinks.classList.contains('active')) {
+                navLinks.classList.remove('active');
+            }
+        });
+    </script>
 </body>
 </html>

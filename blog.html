@@ -1,267 +1,250 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FORWARD! - Blog</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog - FORWARD!</title>
     <style>
-      @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&display=swap");
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&display=swap');
 
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-      body {
-        font-family: "IBM Plex Mono", monospace;
-        background-color: #2b2b2b;
-        color: #ffffff;
-        line-height: 1.6;
-      }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #2b2b2b;
+            color: #e0e0e0;
+            line-height: 1.7;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            font-size: 1.2rem;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
 
-      .container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 20px;
-      }
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4rem;
+        }
 
-      /* Navigation */
-      nav {
-        background-color: #2b2b2b;
-        padding: 20px 0;
-        border-bottom: 1px solid #3a3a3a;
-      }
+        .site-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            letter-spacing: 0.1em;
+            font-weight: 700;
+            text-decoration: none;
+            color: #e0e0e0;
+        }
 
-      .nav-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
+        nav {
+            position: relative;
+        }
 
-      .logo {
-        font-size: 24px;
-        font-weight: bold;
-        color: #ffffff;
-        text-decoration: none;
-      }
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
 
-      .nav-links {
-        display: flex;
-        gap: 30px;
-      }
+        nav a {
+            color: #e0e0e0;
+            text-decoration: none;
+        }
 
-      .nav-links a {
-        color: #ffffff;
-        text-decoration: none;
-        font-size: 16px;
-        transition: color 0.3s ease;
-      }
+        nav a:hover {
+            border-bottom: 1px solid #e0e0e0;
+        }
 
-      .nav-links a:hover {
-        color: #cccccc;
-      }
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: #e0e0e0;
+            font-size: 2rem;
+            padding: 0;
+            line-height: 1;
+        }
 
-      /* Main Content */
-      .main-content {
-        padding: 60px 0;
-      }
+        main {
+            margin: 4rem 0;
+            border-top: 1px solid #404040;
+            padding-top: 4rem;
+        }
 
-      .blog-title {
-        font-size: 48px;
-        margin-bottom: 60px;
-      }
+        h1 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            font-weight: 700;
+        }
 
-      .blog-post {
-        max-width: 800px;
-        margin: 0 auto;
-      }
+        h2 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.8rem;
+            margin: 2rem 0 1rem;
+            font-weight: 700;
+        }
 
-      .blog-content {
-        margin-bottom: 40px;
-      }
+        .blog-content p {
+            color: #b0b0b0;
+            margin: 1rem 0;
+        }
 
-      h1 {
-        font-size: 28px;
-        margin-bottom: 20px;
-      }
+        .highlight {
+            background-color: #363636;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 4px;
+        }
 
-      p {
-        margin-bottom: 20px;
-        color: #cccccc;
-      }
+        .highlight p {
+            margin: 0;
+            color: #e0e0e0;
+        }
 
-      .highlight {
-        background-color: #3a3a3a;
-        padding: 20px;
-        margin: 20px 0;
-        border-radius: 4px;
-      }
+        strong {
+            color: #ffffff;
+            font-weight: 700;
+        }
 
-      .references {
-        margin-top: 40px;
-        padding-top: 20px;
-        border-top: 1px solid #3a3a3a;
-        font-size: 14px;
-        color: #888888;
-      }
+        .references {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid #404040;
+            font-size: 0.9rem;
+            color: #808080;
+        }
 
-      .references p {
-        margin-bottom: 10px;
-      }
+        .references p {
+            margin: 0.5rem 0;
+        }
 
-      strong {
-        color: #ffffff;
-        font-weight: 700;
-      }
+        footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid #404040;
+            color: #808080;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+        }
 
-      /* Footer */
-      footer {
-        padding: 20px 0;
-        color: #666666;
-        position: fixed;
-        bottom: 0;
-        width: 100%;
-        background-color: #2b2b2b;
-      }
+        .top-link {
+            color: #808080;
+            text-decoration: none;
+        }
+
+        .top-link:hover {
+            color: #e0e0e0;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 1rem;
+            }
+
+            .hamburger {
+                display: block;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                right: 0;
+                flex-direction: column;
+                background-color: #2b2b2b;
+                padding: 1rem;
+                border: 1px solid #404040;
+                width: 200px;
+                gap: 1rem;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+        }
     </style>
-  </head>
-  <body>
-    <nav>
-      <div class="container nav-content">
-        <a href="/" class="logo">FORWARD!</a>
-        <div class="nav-links">
-          <a href="/">Home</a>
-          <a href="/projects">Projects</a>
-          <a href="/blogs">Blogs</a>
-          <a href="/works">Works In Progress</a>
-        </div>
-      </div>
-    </nav>
+</head>
+<body>
+    <div class="header-container">
+        <a href="/index.html" class="site-title">FORWARD!</a>
+        <nav>
+            <button class="hamburger">☰</button>
+            <div class="nav-links">
+                <a href="/index.html">Home</a>
+                <a href="/projects.html">Projects</a>
+                <a href="/blog.html">Blogs</a>
+                <a href="/wip.html">Works In Progress</a>
+            </div>
+        </nav>
+    </div>
 
-    <main class="main-content">
-      <div class="container">
-        <h1 class="blog-title">Blog</h1>
-        <div class="blog-post">
-          <div class="blog-content">
-            <h1>NATURAL LANGUAGE PROCESSING OF UNSTRUCTURED LEGAL TEXTS</h1>
-            <p>
-              Series: Stopwords and the Case of Republic v. Yebbi & Avalifo
-              [1999–2000] 2 GLR 50.
-            </p>
+    <main>
+        <h1>NATURAL LANGUAGE PROCESSING OF UNSTRUCTURED LEGAL TEXTS</h1>
+        <div class="blog-content">
+            <p>Series: Stopwords and the Case of Republic v. Yebbi & Avalifo [1999–2000] 2 GLR 50.</p>
             <p>First draft: 24/12/24</p>
 
             <h2>So, what is a stopword?</h2>
-            <p>
-              Stopwords refer to a collection of prepositions, positional
-              conjunctions, and other commonly used words. These words appear in
-              almost every sentence because they are indispensable for conveying
-              coherent thoughts and speech.
-            </p>
+            <p>Stopwords refer to a collection of prepositions, positional conjunctions, and other commonly used words. These words appear in almost every sentence because they are indispensable for conveying coherent thoughts and speech.</p>
 
-            <p>
-              However, stopwords can produce noise or distort the accuracy of
-              several NLP tasks, such as topic modelling.
-            </p>
+            <p>However, stopwords can produce noise or distort the accuracy of several NLP tasks, such as topic modelling.</p>
 
-            <p>
-              Stopword elimination is a critical feature of any natural language
-              processing (NLP) task. Natural Language Toolkit, NLTK and SpaCy
-              provide convenient, off-the-shelf access to comprehensive stopword
-              collections for the English language—at least to the best of my
-              knowledge.
-            </p>
+            <p>Stopword elimination is a critical feature of any natural language processing (NLP) task. Natural Language Toolkit, NLTK and SpaCy provide convenient, off-the-shelf access to comprehensive stopword collections for the English language—at least to the best of my knowledge.</p>
 
-            <p>
-              These indispensable Python packages make NLP tasks, especially the
-              elimination of stopwords, significantly less tedious. However,
-              there's a caveat: always use domain-specific stopword collections
-              in specialized fields.
-            </p>
+            <p>These indispensable Python packages make NLP tasks, especially the elimination of stopwords, significantly less tedious. However, there's a caveat: always use domain-specific stopword collections in specialized fields.</p>
 
-            <p>
-              The Ghanaian case of Republic v. Yebbi & Avalifo [1999–2000] 2 GLR
-              50 is particularly instructive. While the case raises and
-              addresses numerous issues, we will focus on one central question:
-              what constitutes 'the public interest'? Here, the Supreme Court of
-              Ghana attempted to interpret Article 143(1) of the constitution of
-              Ghana which deals with the jurisdiction of the Regional Tribunals.
-              It states that:
-            </p>
+            <p>The Ghanaian case of Republic v. Yebbi & Avalifo [1999–2000] 2 GLR 50 is particularly instructive. While the case raises and addresses numerous issues, we will focus on one central question: what constitutes 'the public interest'? Here, the Supreme Court of Ghana attempted to interpret Article 143(1) of the constitution of Ghana which deals with the jurisdiction of the Regional Tribunals. It states that:</p>
 
             <div class="highlight">
-              <p>
-                (1) A Regional Tribunal shall have jurisdiction to try such
-                offences against the State <strong>and</strong> the public
-                interest as Parliament may, by law, prescribe.
-              </p>
+                <p>(1) A Regional Tribunal shall have jurisdiction to try such offences against the State <strong>and</strong> the public interest as Parliament may, by law, prescribe.</p>
             </div>
 
-            <p>
-              Kindly direct your attention to the presence of the word 'and' it
-              has been bolded to make it easy to identify it.
-            </p>
+            <p>Kindly direct your attention to the presence of the word 'and' it has been bolded to make it easy to identify it.</p>
 
-            <p>
-              Now the court had to determine whether or not
-              <strong
-                >'the word 'and' coming in between 'state' and 'public interest'
-                in the provision, is to be read as disjunctive or conjunctive?
-                In other words, does it mean that any such offence should be
-                against both the state and the public interest;- or is it enough
-                if the offence is either against the state or against public
-                interest?'</strong
-              >
-            </p>
+            <p>Now the court had to determine whether or not <strong>'the word 'and' coming in between 'state' and 'public interest' in the provision, is to be read as disjunctive or conjunctive? In other words, does it mean that any such offence should be against both the state and the public interest;- or is it enough if the offence is either against the state or against public interest?'</strong></p>
 
-            <p>
-              This might seem like a trivial issue because why would the Supreme
-              Court concern itself with the meaning of the word 'and' in a
-              sentence? Everyone knows what the word 'and' means. Well, Yebbi
-              and Avolifo's freedom hinges on the interpretation the Supreme
-              Court will give to the word 'and'. So in this particular instance
-              the meaning of 'and' is a big deal. I am not going to bore you
-              with the entire saga of the Republic v. Yebbi & Avalifo.
-            </p>
+            <p>This might seem like a trivial issue because why would the Supreme Court concern itself with the meaning of the word 'and' in a sentence? Everyone knows what the word 'and' means. Well, Yebbi and Avolifo's freedom hinges on the interpretation the Supreme Court will give to the word 'and'. So in this particular instance the meaning of 'and' is a big deal. I am not going to bore you with the entire saga of the Republic v. Yebbi & Avalifo.</p>
 
-            <p>
-              Let's revisit the subject of NLP. Suppose you are a data engineer and your product manager comes to you that
-              they need data to train a text classification product. You reach out for an existing stopwords collection to clean the texts quickly. Suppose we consider that any sentence containing the term 'and' is marked as irrelevant in both the training and evaluation datasets. Your guess is as good as mine the
-              text classification might decide that the Supreme Court's
-              interpretation of 'public interest' in the case of the Republic v.
-              Yebbi & Avalifo is irrelevant. Just so you know, your product will
-              generate inaccurate results.
-            </p>
+            <p>Let's revisit the subject of NLP. Suppose you are a data engineer and your product manager comes to you that they need data to train a text classification product. You reach out for an existing stopwords collection to clean the texts quickly. Suppose we consider that any sentence containing the term 'and' is marked as irrelevant in both the training and evaluation datasets. Your guess is as good as mine the text classification might decide that the Supreme Court's interpretation of 'public interest' in the case of the Republic v. Yebbi & Avalifo is irrelevant. Just so you know, your product will generate inaccurate results.</p>
 
             <p>This issue is salient in every domain, not just law.</p>
 
             <div class="references">
-              <p>
-                [1]
-                https://www.ibm.com/docs/en/db2/11.1?topic=configuration-stop-words
-              </p>
-              <p>
-                [2]
-                https://guides.library.upenn.edu/penntdm/methods/topic_modeling
-              </p>
-              <p>
-                [3]
-                https://www.studocu.com/row/document/central-university-ghana/criminal-law/the-republic-vs-yebbi-avalifo/56077076
-              </p>
-              <p>
-                [4]
-                https://www.dennislawgh.com/case-preview?dl_citation_no=[2000]DLSC471&srb=
-              </p>
+                <p>[1] https://www.ibm.com/docs/en/db2/11.1?topic=configuration-stop-words</p>
+                <p>[2] https://guides.library.upenn.edu/penntdm/methods/topic_modeling</p>
+                <p>[3] https://www.studocu.com/row/document/central-university-ghana/criminal-law/the-republic-vs-yebbi-avalifo/56077076</p>
+                <p>[4] https://www.dennislawgh.com/case-preview?dl_citation_no=[2000]DLSC471&srb=</p>
             </div>
-          </div>
         </div>
-      </div>
     </main>
 
     <footer>
-      <div class="container">
-        <p>Updated: 15/12/24 17:48:07</p>
-      </div>
+        <div>Updated: 15/12/24 17:48:07</div>
+        <a href="#" class="top-link">TOP</a>
     </footer>
-  </body>
+
+    <script>
+        document.querySelector('.hamburger').addEventListener('click', function() {
+            document.querySelector('.nav-links').classList.toggle('active');
+        });
+
+        document.addEventListener('click', function(event) {
+            const nav = document.querySelector('nav');
+            const navLinks = document.querySelector('.nav-links');
+            if (!nav.contains(event.target) && navLinks.classList.contains('active')) {
+                navLinks.classList.remove('active');
+            }
+        });
+    </script>
+</body>
 </html>

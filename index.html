@@ -5,131 +5,228 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FORWARD!</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&display=swap');
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: monospace;
+        }
+
+        :root {
+            --background-color: #1a1a1a;
+            --text-color: #ffffff;
+            --card-background: rgba(255, 255, 255, 0.1);
+            --spacing-sm: 10px;
+            --spacing-md: 20px;
+            --spacing-lg: 30px;
+            --spacing-xl: 50px;
+            --container-width: 1200px;
+            --transition-speed: 0.3s;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: #2b2b2b;
-            color: #e0e0e0;
-            line-height: 1.7;
-            padding: 2rem;
-            max-width: 800px;
-            margin: 0 auto;
-            font-size: 1.2rem;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
         }
 
-        .header-container {
+
+        .container {
+            max-width: var(--container-width);
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+        }
+
+
+        h1, h2 {
+            font-size: 48px;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        h3 {
+            font-size: 24px;
+            margin-bottom: var(--spacing-md);
+        }
+
+        p {
+            margin-bottom: var(--spacing-md);
+        }
+
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(26, 26, 26, 0.95);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .nav-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 4rem;
+            max-width: var(--container-width);
+            margin: 0 auto;
+            padding: var(--spacing-md);
         }
 
-        .site-title {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 2rem;
-            letter-spacing: 0.1em;
-            font-weight: 700;
-        }
-
-        nav {
-            position: relative;
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
         }
 
         .nav-links {
             display: flex;
-            gap: 1.5rem;
+            gap: var(--spacing-md);
         }
 
-        nav a {
-            color: #e0e0e0;
+        .nav-links a {
+            color: var(--text-color);
             text-decoration: none;
+            transition: opacity var(--transition-speed);
+            font-size: 16px;
         }
 
-        nav a:hover {
-            border-bottom: 1px solid #e0e0e0;
+        .nav-links a:hover {
+            opacity: 0.7;
         }
 
-        .hamburger {
+        .menu-toggle {
             display: none;
             cursor: pointer;
-            background: none;
-            border: none;
-            color: #e0e0e0;
-            font-size: 2rem;
-            padding: 0;
-            line-height: 1;
+            font-size: 24px;
         }
+
 
         main {
-            margin: 4rem 0;
-            border-top: 1px solid #404040;
-            padding-top: 4rem;
+            margin-top: 80px;
+            padding: var(--spacing-xl) 0;
         }
 
-        h1 {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 2.5rem;
-            margin-bottom: 1.5rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
+        section {
+            margin-bottom: var(--spacing-xl);
         }
 
-        .intro {
-            margin-bottom: 3rem;
-            font-size: 1.4rem;
+
+        .project-section {
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .project-section h3 {
+            font-size: 32px;
+            margin: var(--spacing-xl) 0 var(--spacing-lg);
+        }
+
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-lg);
+        }
+
+
+        .card {
+            background-color: var(--card-background);
+            padding: var(--spacing-md);
+            border-radius: 8px;
+            transition: transform var(--transition-speed);
+            height: 100%;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h3 {
+            margin-bottom: var(--spacing-md);
+        }
+
+        .card p {
+            opacity: 0.8;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .card a {
+            color: var(--text-color);
+            text-decoration: none;
+            transition: opacity var(--transition-speed);
+        }
+
+        .card a:hover {
+            opacity: 0.7;
+        }
+
+
+        .tech-stack {
+            display: flex;
+            gap: var(--spacing-sm);
+            flex-wrap: wrap;
+            margin-top: var(--spacing-md);
         }
 
         .contact {
-            margin-bottom: 2rem;
-            font-size: 1.3rem;
+            margin-top: var(--spacing-md);
         }
 
-        .contact div {
-            margin-bottom: 0.8rem;
+        .contact p {
+            margin-bottom: var(--spacing-sm);
         }
 
-        a {
-            color: #e0e0e0;
-            text-decoration: none;
-            border-bottom: 1px solid #404040;
+
+        .updated {
+            margin-top: var(--spacing-xl);
+            opacity: 0.5;
+            font-size: 14px;
+        }
+        
+        .profile{
+            font-size: 20px;
         }
 
-        a:hover {
-            border-bottom-color: #e0e0e0;
+        .profile a{
+            color: var(--text-color);
+            text-decoration: underline;
+            transition: opacity var(--transition-speed);
+            font-size: 16px; 
         }
 
-        .technologies {
-            margin: 2rem 0;
+
+
+        #top-button {
+            position: fixed;
+            bottom: var(--spacing-md);
+            right: var(--spacing-md);
+            background: var(--card-background);
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: 5px;
+            cursor: pointer;
+            display: none;
+            z-index: 1000;
+            transition: opacity var(--transition-speed);
         }
 
-        .tech-list {
-            color: #808080;
-            font-size: 1.3rem;
-            margin-bottom: 0.5rem;
+        #top-button:hover {
+            opacity: 0.8;
         }
 
-        footer {
-            color: #808080;
-            font-size: 1rem;
-            margin-top: 4rem;
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        @media (max-width: 600px) {
-            body {
-                padding: 1rem;
+ 
+        @media screen and (max-width: 1200px) {
+            .grid {
+                grid-template-columns: repeat(2, 1fr);
             }
 
-            .hamburger {
+            .container {
+                padding: 0 var(--spacing-lg);
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .menu-toggle {
                 display: block;
             }
 
@@ -137,71 +234,271 @@
                 display: none;
                 position: absolute;
                 top: 100%;
+                left: 0;
                 right: 0;
+                background-color: var(--background-color);
                 flex-direction: column;
-                background-color: #2b2b2b;
-                padding: 1rem;
-                border: 1px solid #404040;
-                width: 200px;
-                gap: 1rem;
+                padding: var(--spacing-md);
+                text-align: center;
             }
 
             .nav-links.active {
                 display: flex;
             }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1, h2 {
+                font-size: 36px;
+            }
+
+            .project-section h3 {
+                font-size: 24px;
+                margin: var(--spacing-lg) 0;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .logo {
+                font-size: 20px;
+            }
+
+            h1, h2 {
+                font-size: 28px;
+            }
+
+            .card {
+                padding: var(--spacing-sm);
+            }
+
+            .tech-stack {
+                flex-direction: column;
+                gap: var(--spacing-sm);
+            }
+
+            .container {
+                padding: 0 var(--spacing-sm);
+            }
         }
     </style>
 </head>
 <body>
-    <div class="header-container">
-        <div class="site-title">FORWARD!</div>
-        <nav>
-            <button class="hamburger">☰</button>
+    <nav>
+        <div class="nav-container">
+            <div class="logo">FORWARD!</div>
+            <div class="menu-toggle">☰</div>
             <div class="nav-links">
-                <a href = /index.html>Home</a>
-                <a href=/projects.html>Projects</a>
-                <a href=/blog.html>Blogs</a>
-                <a href=/wip.html>Works In Progress</a>
+                <a href="#home">Home</a>
+                <a href="#projects">Projects</a>
+                <a href= blog.html>Blogs</a>
+                <a href="#wip">Works In Progress</a>
             </div>
-        </nav>
-    </div>
+        </div>
+    </nav>
 
     <main>
-        <section class="intro">
-            <h1>Hello</h1>
-            <div>My name is Samuel. I am a software developer.</div>
-        </section>
+        <div class="container">
+            <div class="profile">
 
-        <section class="contact">
-            <div> Email:
-                <a href="mailto:dsasante1@gmail.com">dsasante1@gmail.com</a>
+                <section id="home">
+                    <h3>Hello</h3>
+                    <p>My name is Samuel. I am a software developer.</p>
+                    <div class="contact">
+                    <p>Email:
+                        <a href="mailto:dsasante1@gmail.com">dsasante1@gmail.com</a>
+                    </p>
+                        <p>
+                        Github:
+                    <a href="https://github.com/kasante1">kasante1</a> | 
+                    <a href="https://github.com/dsasante1">dsasante1</a>
+                        </p>
+    
+                    </div>
+                    <div class="tech-stack">
+                        <span>Python</span> •
+                        <span>Dart + Flutter</span> •
+                        <span>Typescript</span> •
+                        <span>Go</span>
+                    </div>
+                    <p>learning: Elixir</p>
+                </section>
+    
             </div>
-            <div>
-                Github:
-                <a href="https://github.com/kasante1">kasante1</a> / 
-                <a href="https://github.com/dsasante1">dsasante1</a>
-            </div>
-        </section>
+           
+            <section id="projects">
+                <h3>Projects</h3>
+                
+                <div class="project-section">
+                    <div class="grid">
+                        <div class="card">
+                           <h3> <a href="https://app.carduvy.com/auth/login">Carduvy</a></h3>
 
-        <section class="technologies">
-            <div class="tech-list">Python • Dart + Flutter • Typescript • Go</div>
-            <div class="tech-list">learning: Elixir</div>
-        </section>
+                           <p>Carduvy is a platform to buy and sell giftcards and pay bills in Nigeria and Ghana.</p>
+                            
+                           <p>
+                            Typescript | ExpressJs | Postgresql | AWS | Redis | BullMQ
+                            </p>
+                           
+                        </div>
+
+                        <div class="card">
+                            <h3><a href="https://clearlinehmo.com">clearline</a></h3>
+                            <p>
+                                Clearline is a health maintenance organization (HMO) that provides various health insurance plans with comprehensive healthcare coverage options.
+                            </p>
+                            
+                            
+                            <p>
+                                Typescript | ExpressJs | Postgresql | AWS | Redis | BullMQ
+                            </p>
+                           
+                        </div>
+
+                        <div class="card">
+                            <h3><a href="https://compliancecore.com">compliance core</a></h3>
+                         
+                            <p>Compliance Core Management Platform automates regulatory processes and helps businesses maintain regulatory compliance.
+                            </p>
+
+                            <p>
+                                Typescript | ExpressJs | Postgresql | AWS | Redis | BullMQ
+                            </p>
+                            
+                        </div>
+                            <div class="card">
+                            <h3><a href="https://visit.vaskafreelancer.com">vaska freelancers</a></h3>
+                            <p>Vaska is a complete freelance project management solution</p>
+
+                            <p>
+                                Typescript | ExpressJs | Postgresql | AWS | Redis | BullMQ
+                            </p>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-section">
+                    <h3>Personal Projects</h3>
+                    <div class="grid">
+                        <div class="card">
+                           <h3> <a href="https://play.google.com/store/apps/details?id=com.constitutionofghana">Constitution of Ghana, 1992 Plus</a></h3>
+                            <p>This Android app offers a dependable and up-to-date resource on the 1992 Constitution of the Republic of Ghana, complemented by interpretations and insights from court rulings.</p>
+
+                            <p>
+                                Dart | Flutter | Firebase 
+                            </p>
+                            <a href="https://kasante1.github.io/constitutionofghana1992plus/">→ Check web version</a>
+                        </div>
+                        <div class="card">
+                           <h3><a href="https://share.streamlit.io/kasante1/aih-extractor/main">Arguments, Issues, Holdings Extractor</a></h3>
+                            <p>This project automatically extracts Arguments, Issues and Holdings from court rulings.</p>
+
+                            <p>
+                                Python | SpacyNLP | NLTK 
+                            </p>
+                        </div>
+                        <div class="card">
+                            <h3><a href="https://kasante1-penaltyunitcalculator-streamlit-app-1mp53d.streamlit.app/">The Penalty Unit Calculator</a></h3>
+                            <p>It provides the monetary equivalent of a penalty unit. A "Penalty unit" refers to such units established by Section 26 of the Interpretation Act, 2009 (Act 792).</p>
+
+                            <p>
+                                Python | Apache Airflow
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+                <div class="project-section">
+                    <h3>Tools and Utilities</h3>
+                    <div class="grid">
+                        <div class="card">
+                            <h3><a href="https://github.com/kasante1/goblin">goblin</a></h3>
+                            <p>It creates a go project template.</p>
+                            Go
+                            
+                        </div>
+                        <div class="card">
+                            <h3><a href="https://github.com/kasante1/express_maker">express maker</a></h3>
+                            <p>It creates an express js project template</p>
+                            Go
+                        </div>
+
+                        <div class="card">
+                            <h3><a href="https://github.com/kasante1/insidious">insidious</a></h3>
+                            <p>It analyzes Express.js projects for route conflicts and generates similarity reports.</p>
+                            Rust
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="wip">
+                <h3>Works in Progress</h3>
+                <div class="grid">
+                    <div class="card">
+                        <h3><a href="https://share.streamlit.io/kasante1/casesnetwork/main">Graph Visualization of Legal Precedent in Ghana</a></h3>
+                        <p>A Property graph of Superior Courts decided Cases of Ghana from 1992 to 2020. This is a work in progress!</p>
+                        Python | Neo4j | Apache Airflow | NetworkX
+                    </div>
+                    <div class="card">
+                       <h3> <a href="https://kasante1-newdiffvisualizer-streamlit-app-mpp1rr.streamlit.app/">DifVisualiser</a></h3>
+                        <p>Identify and Visualise differences between two or more text documents especially Legal Statutes.</p>
+                        Python | SpacyNLP | NLTK 
+                    </div>
+                </div>
+            </section>
+
+            <div class="updated">Updated: 23/02/25 14:02:07</div>
+        </div>
     </main>
 
- <div>Updated: 15/12/24 17:48:07</div>
+    <div id="top-button">TOP</div>
 
     <script>
-        document.querySelector('.hamburger').addEventListener('click', function() {
-            document.querySelector('.nav-links').classList.toggle('active');
+
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navLinks = document.querySelector('.nav-links');
+
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
         });
 
-        document.addEventListener('click', function(event) {
-            const nav = document.querySelector('nav');
-            const navLinks = document.querySelector('.nav-links');
-            if (!nav.contains(event.target) && navLinks.classList.contains('active')) {
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.nav-container')) {
                 navLinks.classList.remove('active');
             }
+        });
+
+
+        window.onscroll = function() {
+            const topButton = document.getElementById('top-button');
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                topButton.style.display = 'block';
+            } else {
+                topButton.style.display = 'none';
+            }
+        };
+
+
+        document.getElementById('top-button').onclick = function() {
+            document.body.scrollTop = 0; 
+            document.documentElement.scrollTop = 0;
+        };
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+
+                navLinks.classList.remove('active');
+            });
         });
     </script>
 </body>

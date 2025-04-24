@@ -18,19 +18,20 @@
             background-color: #2b2b2b;
             color: #e0e0e0;
             line-height: 1.7;
-            padding: 2rem;
-            max-width: 800px;
-            margin: 0 auto;
             font-size: 1.2rem;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         .header-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 4rem;
+            padding: 2rem;
+            border-bottom: 1px solid #404040;
         }
 
         .site-title {
@@ -71,10 +72,58 @@
             line-height: 1;
         }
 
+        .content-container {
+            display: flex;
+            flex: 1;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: #252525;
+            padding: 2rem 1rem;
+            border-right: 1px solid #404040;
+            flex-shrink: 0;
+        }
+
+        .sidebar h3 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #404040;
+        }
+
+        .article-links {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .article-link {
+            color: #b0b0b0;
+            text-decoration: none;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .article-link:hover {
+            background-color: #333333;
+            color: #ffffff;
+        }
+
+        .article-link.active {
+            background-color: #404040;
+            color: #ffffff;
+            font-weight: 500;
+        }
+
         main {
-            margin: 4rem 0;
-            border-top: 1px solid #404040;
-            padding-top: 4rem;
+            flex: 1;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
         }
 
         h1 {
@@ -88,6 +137,13 @@
             font-family: 'JetBrains Mono', monospace;
             font-size: 1.8rem;
             margin: 2rem 0 1rem;
+            font-weight: 700;
+        }
+
+        h3 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.4rem;
+            margin: 1.5rem 0 1rem;
             font-weight: 700;
         }
 
@@ -106,6 +162,10 @@
         .highlight p {
             margin: 0;
             color: #e0e0e0;
+            white-space: pre-wrap;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
         }
 
         strong {
@@ -129,8 +189,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 4rem;
-            padding-top: 2rem;
+            padding: 2rem;
             border-top: 1px solid #404040;
             color: #808080;
             font-family: 'JetBrains Mono', monospace;
@@ -146,8 +205,30 @@
             color: #e0e0e0;
         }
 
-        @media (max-width: 600px) {
-            body {
+        /* Articles section */
+        .articles {
+            display: none;
+        }
+
+        .articles.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .content-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #404040;
                 padding: 1rem;
             }
 
@@ -166,6 +247,7 @@
                 border: 1px solid #404040;
                 width: 200px;
                 gap: 1rem;
+                z-index: 100;
             }
 
             .nav-links.active {
@@ -185,56 +267,381 @@
         </nav>
     </div>
 
-    <main>
-        <h1>Blogs</h1>
-        <h2>NATURAL LANGUAGE PROCESSING OF UNSTRUCTURED LEGAL TEXTS:
-
-            Stopwords and the Case of Republic v Yebbi & Avalifo [1999–2000] 2 GLR 50.
-
-        </h2>
-        <div class="blog-content">
-            <p>First draft: 24/12/24</p>
-
-            <h3>So, what is a stopword?</h3>
-            <p>Stopwords refer to a collection of prepositions, positional conjunctions, and other commonly used words. These words appear in almost every sentence because they are indispensable for conveying coherent thoughts and speech.</p>
-
-            <p>However, stopwords can produce noise or distort the accuracy of several NLP tasks, such as topic modelling.</p>
-
-            <p>Stopword elimination is a critical feature of any natural language processing (NLP) task. Natural Language Toolkit, NLTK and SpaCy provide convenient, off-the-shelf access to comprehensive stopword collections for the English language—at least to the best of my knowledge.</p>
-
-            <p>These indispensable Python packages make NLP tasks, especially the elimination of stopwords, significantly less tedious. However, there's a caveat: always use domain-specific stopword collections in specialized fields.</p>
-
-            <p>The Ghanaian case of Republic v. Yebbi & Avalifo [1999–2000] 2 GLR 50 is particularly instructive. While the case raises and addresses numerous issues, we will focus on one central question: what constitutes 'the public interest'? Here, the Supreme Court of Ghana attempted to interpret Article 143(1) of the constitution of Ghana which deals with the jurisdiction of the Regional Tribunals. It states that:</p>
-
-            <div class="highlight">
-                <p>(1) A Regional Tribunal shall have jurisdiction to try such offences against the State <strong>and</strong> the public interest as Parliament may, by law, prescribe.</p>
+    <div class="content-container">
+        <aside class="sidebar">
+            <h3>Articles</h3>
+            <div class="article-links">
+                <a href="#nlp-legal-texts" class="article-link active" data-article="nlp-legal-texts">NLP of Unstructured Legal Texts</a>
+                <a href="#express-hubtel" class="article-link" data-article="express-hubtel">ExpressJs, Hubtel Online Checkout Integration</a>
             </div>
+        </aside>
 
-            <p>Kindly direct your attention to the presence of the word 'and' it has been bolded to make it easy to identify it.</p>
+        <main>
+            <h1>Blogs</h1>
+            
+            <!-- NLP Article -->
+            <section id="nlp-legal-texts" class="articles active">
+                <h2>NATURAL LANGUAGE PROCESSING OF UNSTRUCTURED LEGAL TEXTS:
+                    Stopwords and the Case of Republic v Yebbi & Avalifo [1999–2000] 2 GLR 50.
+                </h2>
+                <div class="blog-content">
+                    <p>First draft: 24/12/24</p>
 
-            <p>Now the court had to determine whether or not <strong>'the word 'and' coming in between 'state' and 'public interest' in the provision, is to be read as disjunctive or conjunctive? In other words, does it mean that any such offence should be against both the state and the public interest;- or is it enough if the offence is either against the state or against public interest?'</strong></p>
+                    <h3>So, what is a stopword?</h3>
+                    <p>Stopwords refer to a collection of prepositions, positional conjunctions, and other commonly used words. These words appear in almost every sentence because they are indispensable for conveying coherent thoughts and speech.</p>
 
-            <p>This might seem like a trivial issue because why would the Supreme Court concern itself with the meaning of the word 'and' in a sentence? Everyone knows what the word 'and' means. Well, Yebbi and Avolifo's freedom hinges on the interpretation the Supreme Court will give to the word 'and'. So in this particular instance the meaning of 'and' is a big deal. I am not going to bore you with the entire saga of the Republic v. Yebbi & Avalifo.</p>
+                    <p>However, stopwords can produce noise or distort the accuracy of several NLP tasks, such as topic modelling.</p>
 
-            <p>Let's revisit the subject of NLP. Suppose you are a data engineer and your product manager comes to you that they need data to train a text classification product. You reach out for an existing stopwords collection to clean the texts quickly. Suppose we consider that any sentence containing the term 'and' is marked as irrelevant in both the training and evaluation datasets. Your guess is as good as mine the text classification might decide that the Supreme Court's interpretation of 'public interest' in the case of the Republic v. Yebbi & Avalifo is irrelevant. Just so you know, your product will generate inaccurate results.</p>
+                    <p>Stopword elimination is a critical feature of any natural language processing (NLP) task. Natural Language Toolkit, NLTK and SpaCy provide convenient, off-the-shelf access to comprehensive stopword collections for the English language—at least to the best of my knowledge.</p>
 
-            <p>This issue is salient in every domain, not just law.</p>
+                    <p>These indispensable Python packages make NLP tasks, especially the elimination of stopwords, significantly less tedious. However, there's a caveat: always use domain-specific stopword collections in specialized fields.</p>
 
-            <div class="references">
-                <p>[1] https://www.ibm.com/docs/en/db2/11.1?topic=configuration-stop-words</p>
-                <p>[2] https://guides.library.upenn.edu/penntdm/methods/topic_modeling</p>
-                <p>[3] https://www.studocu.com/row/document/central-university-ghana/criminal-law/the-republic-vs-yebbi-avalifo/56077076</p>
-                <p>[4] https://www.dennislawgh.com/case-preview?dl_citation_no=[2000]DLSC471&srb=</p>
-            </div>
-        </div>
-    </main>
+                    <p>The Ghanaian case of Republic v. Yebbi & Avalifo [1999–2000] 2 GLR 50 is particularly instructive. While the case raises and addresses numerous issues, we will focus on one central question: what constitutes 'the public interest'? Here, the Supreme Court of Ghana attempted to interpret Article 143(1) of the constitution of Ghana which deals with the jurisdiction of the Regional Tribunals. It states that:</p>
+
+                    <div class="highlight">
+                        <p>(1) A Regional Tribunal shall have jurisdiction to try such offences against the State <strong>and</strong> the public interest as Parliament may, by law, prescribe.</p>
+                    </div>
+
+                    <p>Kindly direct your attention to the presence of the word 'and' it has been bolded to make it easy to identify it.</p>
+
+                    <p>Now the court had to determine whether or not <strong>'the word 'and' coming in between 'state' and 'public interest' in the provision, is to be read as disjunctive or conjunctive? In other words, does it mean that any such offence should be against both the state and the public interest;- or is it enough if the offence is either against the state or against public interest?'</strong></p>
+
+                    <p>This might seem like a trivial issue because why would the Supreme Court concern itself with the meaning of the word 'and' in a sentence? Everyone knows what the word 'and' means. Well, Yebbi and Avolifo's freedom hinges on the interpretation the Supreme Court will give to the word 'and'. So in this particular instance the meaning of 'and' is a big deal. I am not going to bore you with the entire saga of the Republic v. Yebbi & Avalifo.</p>
+
+                    <p>Let's revisit the subject of NLP. Suppose you are a data engineer and your product manager comes to you that they need data to train a text classification product. You reach out for an existing stopwords collection to clean the texts quickly. Suppose we consider that any sentence containing the term 'and' is marked as irrelevant in both the training and evaluation datasets. Your guess is as good as mine the text classification might decide that the Supreme Court's interpretation of 'public interest' in the case of the Republic v. Yebbi & Avalifo is irrelevant. Just so you know, your product will generate inaccurate results.</p>
+
+                    <p>This issue is salient in every domain, not just law.</p>
+
+                    <div class="references">
+                        <p>[1] https://www.ibm.com/docs/en/db2/11.1?topic=configuration-stop-words</p>
+                        <p>[2] https://guides.library.upenn.edu/penntdm/methods/topic_modeling</p>
+                        <p>[3] https://www.studocu.com/row/document/central-university-ghana/criminal-law/the-republic-vs-yebbi-avalifo/56077076</p>
+                        <p>[4] https://www.dennislawgh.com/case-preview?dl_citation_no=[2000]DLSC471&srb=</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ExpressJs Article -->
+            <section id="express-hubtel" class="articles">
+                <h2>ExpressJs, Hubtel Online Checkout Integration and Security Matters</h2>
+                <div class="blog-content">
+                    <p>First draft: 23/04/25</p>
+
+                    <h3>Understanding Hubtel's Online Checkout</h3>
+                    <p>A thorough review of Hubtel's online checkout documentation reveals that the responsibility of securing the webhook falls entirely on the developer. Unlike Stripe or Paystack, which provide robust webhook security mechanisms with signature verification, I believe Hubtel's system requires developers to implement their own security measures.</p>
+
+                    <p>It's worth noting that Hubtel's redirect checkout doesn't provide a sandbox or test environment, so caution should be exercised when implementing this in development.</p>
+
+                    <h3>Basic Implementation</h3>
+                    <p>Let's start with the basic implementation for creating a redirect checkout to receive payments:</p>
+
+                    <div class="highlight">
+                        <p>// Environment configuration
+const HUBTEL_CLIENT_ID = process.env.HUBTEL_CLIENT_ID;
+const HUBTEL_CLIENT_SECRET = process.env.HUBTEL_CLIENT_SECRET;
+
+// Helper function for authentication
+export const getHubtelAuthHeader = () => {
+  const auth = Buffer.from(
+    `${HUBTEL_CLIENT_ID}:${HUBTEL_CLIENT_SECRET}`
+  ).toString('base64');
+  return `Basic ${auth}`;
+};
+
+// Express route for creating payment checkout
+app.post("/create-payment-checkout", async function(req, res) {
+  try {
+    const result = await createPaymentCheckout(req.body);
+
+    return res.status(StatusCodes.CREATED).json({
+      status: 'success',
+      statusCode: StatusCodes.CREATED,
+      message: 'Created payment checkout successfully',
+      data: result,
+    });
+  } catch (err) {
+    console.error('Payment checkout error:', err);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      status: 'error',
+      message: 'An error occurred while making payment for the order',
+      details: process.env.NODE_ENV === 'development' ? err.message : undefined
+    });
+  }
+});</p>
+                    </div>
+
+                    <div class="highlight">
+                        <p>// Function to create payment checkout
+const createPaymentCheckout = async (payee: CreatePaymentCheckoutData) => {
+  try {
+    const { name, email, phone, amount, description, order_id, title } = payee;
+
+    const payload = {
+      merchantAccountNumber: process.env.HUBTEL_MERCHANT_ACCOUNT_NUMBER,
+      totalAmount: amount,
+      title: title,
+      description: description || 'Payment for services',
+      callbackUrl: `${process.env.BACKEND_WEBHOOK_URL}/hubtel-webhook`,
+      returnUrl: `${process.env.FRONTEND_URL}/payment/payment-success`,
+      cancellationUrl: `${process.env.FRONTEND_URL}/payment/payment-failed`,
+      payeeName: name,
+      payeeEmail: email || '',
+      payeeMobileNumber: phone,
+      clientReference: order_id,
+    };
+
+    const response = await axios.post(
+      `${process.env.HUBTEL_ONLINE_CHECKOUT_URL}`,
+      payload,
+      {
+        headers: {
+          Authorization: getHubtelAuthHeader(),
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    
+    if (response.data && response.data.responseCode === '0000') {
+      return response.data.data.checkoutUrl;
+    }
+    
+    throw new Error(`Failed to create payment checkout: ${JSON.stringify(response.data)}`);
+  } catch (error) {
+    console.error('Payment checkout creation error:', error);
+    throw new Error(
+      error.response?.data?.message || 'Failed to create payment checkout'
+    );
+  }
+};</p>
+                    </div>
+
+                    <h3>The Security Challenge</h3>
+                    <p>In the implementation above, notice the callbackUrl parameter. This is where you specify your webhook URL, which Hubtel will use to send payment status updates.</p>
+
+                    <p>If you've worked with payment processors like Stripe or Paystack before, you might be wondering about webhook security. These providers implement signature verification to ensure that:</p>
+                    <p>- The webhook is called by the expected source (the payment processor)<br>
+                    - The webhook payload hasn't been tampered with</p>
+
+                    <p>Without these security mechanisms, your system becomes vulnerable to replay attacks, where an attacker could send fake webhook events to your endpoint, potentially triggering unwanted actions.</p>
+
+                    <h3>Implementing Webhook Security</h3>
+                    <p>Since Hubtel doesn't provide built-in webhook security for their redirect checkout system, we need to implement our own. Here's a robust approach using Redis to create one-time verification codes:</p>
+
+                    <div class="highlight">
+                        <p>import crypto from 'crypto';
+
+// Function to secure webhook by generating a verification code
+const secure_webhook = async (order_id: string) => {
+  try {
+    // Generate a random verification code
+    const verification_code = generateVerificationCode(10);
+    const webhook_secret = `webhook_secret_${verification_code}`;
+
+    // Clear any existing keys with the same name
+    await redisService.delFromRedis(webhook_secret);
+
+    // Store the verification code and order ID in Redis with expiration
+    await redisService.addToRedis({
+      key: webhook_secret,
+      value: { key: webhook_secret, order_id: order_id },
+      expiresIn: 3600, // expires after 1 hour
+    });
+    
+    return verification_code;
+  } catch (error) {
+    console.error('Error securing webhook:', error);
+    throw error;
+  }
+};</p>
+                    </div>
+
+                    <div class="highlight">
+                        <p>// Function to verify webhook using the verification code
+const verify_webhook = async (
+  reference: string
+): Promise<{ success: boolean; order_id: string }> => {
+  try {
+    const key = `webhook_secret_${reference}`;
+    const verify_key = await redisService.getFromRedis(key);
+    
+    if (!verify_key) {
+      console.warn(`Webhook verification failed: No key found for reference ${reference}`);
+      return { success: false, order_id: '' };
+    }
+    
+    const verify_key_obj =
+      typeof verify_key === 'string' ? JSON.parse(verify_key) : verify_key;
+    const order_id = verify_key_obj.order_id;
+    
+    // Delete the key after verification to prevent reuse
+    await redisService.delFromRedis(key);
+    
+    return { success: true, order_id };
+  } catch (error) {
+    console.error('Error verifying webhook:', error);
+    throw error;
+  }
+};</p>
+                    </div>
+
+                    <div class="highlight">
+                        <p>// Helper function to validate amount
+const amountValidator = (amount: string | number) => {
+  try {
+    const stringify_amount = amount.toString();
+    const parsedAmount = parseFloat(stringify_amount);
+    
+    if (isNaN(parsedAmount) || parsedAmount <= 0) {
+      throw new Error('Invalid payment amount: must be a positive number');
+    }
+    
+    return parsedAmount;
+  } catch (error) {
+    console.error('Amount validation error:', error);
+    throw new Error('Invalid payment amount');
+  }
+};
+
+// Function to generate random verification code
+function generateVerificationCode(length: number): string {
+  return crypto.randomBytes(length).toString('hex');
+}</p>
+                    </div>
+
+                    <p>Here's the updated createPaymentCheckout function with security implementation:</p>
+
+                    <div class="highlight">
+                        <p>// Updated createPaymentCheckout function with security implementation
+const createPaymentCheckout = async (payee: CreatePaymentCheckoutData) => {
+  try {
+    const { name, email, phone, amount, description, order_id, title } = payee;
+
+    // Generate and store verification code
+    const transaction_reference = await secure_webhook(order_id);
+    
+    // Validate payment amount
+    const validated_amount = amountValidator(amount);
+
+    const payload = {
+      merchantAccountNumber: process.env.HUBTEL_MERCHANT_ACCOUNT_NUMBER,
+      totalAmount: validated_amount,
+      title: title,
+      description: description || 'Payment for services',
+      callbackUrl: `${process.env.BACKEND_URL}/hubtel-webhook`,
+      returnUrl: `${process.env.FRONTEND_URL}/payment/payment-success`,
+      cancellationUrl: `${process.env.FRONTEND_URL}/payment/payment-failed`,
+      payeeName: name,
+      payeeEmail: email || '',
+      payeeMobileNumber: phone,
+      clientReference: transaction_reference, // Use verification code as reference
+    };
+
+    console.log(`Creating payment checkout for order ${order_id} with reference ${transaction_reference}`);
+
+    const response = await axios.post(
+      `${process.env.HUBTEL_ONLINE_CHECKOUT_URL}`,
+      payload,
+      {
+        headers: {
+          Authorization: getHubtelAuthHeader(),
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    
+    if (response.data && response.data.responseCode === '0000') {
+      return response.data.data.checkoutUrl;
+    }
+    
+    throw new Error(`Failed to create payment checkout: ${JSON.stringify(response.data)}`);
+  } catch (error) {
+    console.error('Payment checkout creation error:', error);
+    throw new Error(
+      error.response?.data?.message || 'Failed to create payment checkout'
+    );
+  }
+};</p>
+                    </div>
+
+                    <h3>Implementing the Webhook Endpoint</h3>
+                    <p>Now, let's implement the webhook endpoint that will receive callbacks from Hubtel:</p>
+
+                    <div class="highlight">
+                        <p>app.post('/hubtel-webhook', async (req, res) => {
+  try {
+    const { ClientReference, Status, Amount, Description } = req.body;
+    
+    // Verify the webhook using our security mechanism
+    const verification = await verify_webhook(ClientReference);
+    
+    if (!verification.success) {
+      return res.status(StatusCodes.UNAUTHORIZED).json({
+        status: 'error',
+        message: 'Invalid webhook reference',
+      });
+    }
+    
+    // Additional business logic here
+    
+    return res.status(StatusCodes.OK).json({
+      status: 'success',
+      message: 'Webhook processed successfully',
+    });
+  } catch (error) {
+    console.error('Webhook processing error:', error);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      status: 'error',
+      message: 'An error occurred while processing the webhook',
+    });
+  }
+});</p>
+                    </div>
+
+                    <h3>How the Security Mechanism Works</h3>
+                    <p>Our webhook security implementation works as follows:</p>
+                    <p>- <strong>One-Time Verification Codes:</strong> When creating a payment checkout, we generate a random verification code and store it in Redis along with the order ID.</p>
+
+                    <p>- <strong>Prevention of Replay Attacks:</strong> The verification code is used as the clientReference sent to Hubtel, and when Hubtel sends a webhook callback, this reference is included. We verify the reference against our Redis store and delete it after verification, ensuring it can be used only once.</p>
+
+                    <p>- <strong>Time-Limited Exposure:</strong> We set an expiration time (1 hour) for the verification code in Redis, limiting the window of vulnerability.</p>
+
+                    <p>- <strong>Input Validation:</strong> We validate and sanitize payment amounts to prevent injection attacks.</p>
+
+                    <h3>Additional Security Recommendations</h3>
+                    <p>Beyond the implementation above, consider these additional security measures:</p>
+                    <p>- <strong>Rate Limiting:</strong> Implement rate limiting on your webhook endpoint to prevent brute force attacks.</p>
+
+                    <p>- <strong>TLS Configuration:</strong> Ensure your server uses TLS (HTTPS) with proper configuration.</p>
+
+                    <p>- <strong>Comprehensive Logging:</strong> Implement detailed logging for all webhook interactions to aid in debugging and security auditing.</p>
+
+                    <p>- <strong>Idempotency:</strong> Ensure your webhook processing is idempotent to prevent issues if a webhook is somehow processed multiple times.</p>
+
+
+                    <h3>Conclusion</h3>
+                    <p>Implementing Hubtel's redirect checkout with Express.js and TypeScript requires careful attention to security, particularly for webhooks. The approach outlined in this guide addresses the security gaps in Hubtel's system by implementing one-time verification codes with Redis.</p>
+
+                    <p>This implementation attempts to provide a robust defense against replay attacks.</p>
+
+                    <p>Note: This implementation assumes you have a Redis service configured. If you're using a different data store, you'll need to adapt the code accordingly.</p>
+
+                    <div class="references">
+                        <p>[1] https://developers.hubtel.com/docs/online-checkout</p>
+                        <p>[2] https://expressjs.com/en/guide/routing.html</p>
+                        <p>[3] https://redis.io/docs/manual/security/</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
 
     <footer>
-        <div>Updated: 15/12/24 17:48:07</div>
+        <div>Updated: 24/4/25 09:48:07</div>
         <a href="#" class="top-link">TOP</a>
     </footer>
 
     <script>
+        // Toggle mobile navigation
         document.querySelector('.hamburger').addEventListener('click', function() {
             document.querySelector('.nav-links').classList.toggle('active');
         });
@@ -245,6 +652,43 @@
             if (!nav.contains(event.target) && navLinks.classList.contains('active')) {
                 navLinks.classList.remove('active');
             }
+        });
+
+        // Article navigation
+        const articleLinks = document.querySelectorAll('.article-link');
+        const articles = document.querySelectorAll('.articles');
+
+        articleLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Update active link
+                articleLinks.forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Show selected article
+                const articleId = this.getAttribute('data-article');
+                articles.forEach(article => {
+                    article.classList.remove('active');
+                    if (article.id === articleId) {
+                        article.classList.add('active');
+                        
+                        // Smooth scroll to article on mobile
+                        if (window.innerWidth <= 768) {
+                            article.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    }
+                });
+            });
+        });
+
+        // Scroll to top
+        document.querySelector('.top-link').addEventListener('click', function(e) {
+            e.preventDefault();
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
         });
     </script>
 </body>

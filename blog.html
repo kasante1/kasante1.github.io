@@ -15,15 +15,15 @@
         }
 
         :root {
-            --bg: #101010;
-            --bg-nav: #0b0b0b;
-            --surface: #151515;
-            --border: #232323;
-            --border-strong: #2f2f2f;
+            --bg: #0c0f0d;
+            --bg-nav: #080b09;
+            --surface: #111614;
+            --border: #1e2621;
+            --border-strong: #2a342e;
             --text: #e6e6e6;
             --text-dim: #c2c2c2;
             --muted: #8a8a8a;
-            --accent: #e5484d;
+            --accent: #3fdc7b;
             --font-display: 'Space Mono', 'Courier New', monospace;
             --font-mono: 'JetBrains Mono', 'Courier New', monospace;
             --font-sans: 'Inter', -apple-system, 'Segoe UI', sans-serif;
@@ -57,7 +57,7 @@
             top: 0;
             left: 0;
             right: 0;
-            background-color: rgba(11, 11, 11, 0.92);
+            background-color: color-mix(in srgb, var(--bg-nav) 92%, transparent);
             border-bottom: 1px solid var(--border);
             backdrop-filter: blur(6px);
             z-index: 1000;
@@ -215,7 +215,7 @@
         .article-link.active {
             color: var(--accent);
             border-left-color: var(--accent);
-            background-color: rgba(229, 72, 77, 0.06);
+            background-color: color-mix(in srgb, var(--accent) 6%, transparent);
         }
 
 
@@ -342,6 +342,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 14px;
             max-width: var(--container-width);
             margin: 0 auto;
             padding: 18px var(--spacing-lg);
@@ -474,7 +476,7 @@
         <div class="nav-container">
             <a class="logo" href="index.html"><span class="chev">&gt;&gt;</span>FORWARD</a>
             <div class="nav-links">
-                <a href="index.html#projects">Projects</a>
+                <a href="index.html#projects">Commercial</a>
                 <a href="index.html#personal">Personal</a>
                 <a href="index.html#wip">WIP</a>
                 <a href="index.html#tools">Tools</a>

@@ -33,6 +33,7 @@
     var TOL = { easy: 46, normal: 30, hard: 17 };
     var MIN_SCATTER = 200;
     var EXTRUDE = { x: 7, y: 10 };
+    var SHORT_ROUND = 5;    // pieces served by the short round
 
     var reduceMotion = window.matchMedia &&
         window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -41,9 +42,16 @@
     var pieces = [];
     var VB = { x: 0, y: 0, w: 1260, h: 1660 };
     var state = 'idle';           // idle | play | done
-    var placed = 0, hints = 0;
-    var startedAt = null, ticker = null, hintTimer = null, vbAnim = null;
+    var placed = 0, hints = 0, misses = 0;
+    var hintTimer = null, sayTimer = null, vbAnim = null;
     var revealed = false, drag = null, opener = null;
+
+    // the pieces this round actually asks for; the rest sit home and locked
+    var round = [];
+    // name-first mode: the region currently being asked for
+    var asked = null;
+    // the piece the player last picked up, so a hint can be scoped to it
+    var lastTouched = null;
 
     function el(tag, attrs) {
         var n = document.createElementNS(SVG_NS, tag);
@@ -135,26 +143,72 @@
         hud.hidden = true;
 
         var stats = html('div', 'gh-stats');
-        ['placed', 'time', 'hints'].forEach(function (k) {
-            var s = html('span');
-            var b = html('b');
-            b.id = 'gh-' + k;
-            if (k === 'placed') { s.appendChild(b); s.appendChild(document.createTextNode(' / 16 placed')); }
-            else { s.appendChild(document.createTextNode(k === 'time' ? 'time ' : 'hints ')); s.appendChild(b); }
-            stats.appendChild(s);
-        });
+
+        // name-first mode asks for a region here; assemble mode leaves it empty
+        var ask = html('span', 'gh-ask');
+        ask.id = 'gh-ask';
+        ask.hidden = true;
+        stats.appendChild(ask);
+
+        [['placed', ' placed'], ['hints', 'hints '], ['misses', 'misses ']]
+            .forEach(function (pair) {
+                var k = pair[0];
+                var s = html('span');
+                var b = html('b');
+                var total;
+                b.id = 'gh-' + k;
+                if (k === 'placed') {
+                    total = html('span');
+                    total.id = 'gh-total';
+                    s.appendChild(b);
+                    s.appendChild(document.createTextNode(' / '));
+                    s.appendChild(total);
+                    s.appendChild(document.createTextNode(pair[1]));
+                } else {
+                    s.appendChild(document.createTextNode(pair[1]));
+                    s.appendChild(b);
+                }
+                stats.appendChild(s);
+            });
 
         var acts = html('div', 'gh-acts');
-        var sel = html('select');
-        sel.id = 'gh-level';
-        sel.setAttribute('aria-label', 'Difficulty');
-        [['easy', 'Easy'], ['normal', 'Normal'], ['hard', 'Hard']].forEach(function (o) {
-            var opt = html('option', null, o[1]);
-            opt.value = o[0];
-            if (o[0] === 'normal') opt.selected = true;
-            sel.appendChild(opt);
-        });
-        sel.addEventListener('change', function () { play(); });
+
+        // changing a select restarts the round, so it asks first once you are underway
+        var guard = function (fn) {
+            return function () {
+                if (state === 'play' && placed > 0 &&
+                    !window.confirm('Start a new round? This one will be cleared.')) {
+                    return false;
+                }
+                fn();
+                return true;
+            };
+        };
+
+        var mkSel = function (id, label, opts, initial, onPick) {
+            var s = html('select');
+            s.id = id;
+            s.setAttribute('aria-label', label);
+            opts.forEach(function (o) {
+                var opt = html('option', null, o[1]);
+                opt.value = o[0];
+                if (o[0] === initial) opt.selected = true;
+                s.appendChild(opt);
+            });
+            var last = initial;
+            s.addEventListener('change', function () {
+                if (guard(onPick)()) last = s.value;
+                else s.value = last;   // declined: put the select back
+            });
+            return s;
+        };
+
+        acts.appendChild(mkSel('gh-mode', 'Mode',
+            [['assemble', 'Assemble'], ['named', 'Name-first']], 'assemble', play));
+        acts.appendChild(mkSel('gh-level', 'Difficulty',
+            [['easy', 'Easy'], ['normal', 'Normal'], ['hard', 'Hard']], 'normal', play));
+        acts.appendChild(mkSel('gh-len', 'Round length',
+            [['short', '5 regions'], ['full', '16 regions']], 'full', play));
 
         var mk = function (id, label, fn) {
             var b = html('button', null, label);
@@ -163,10 +217,15 @@
             b.addEventListener('click', fn);
             return b;
         };
-        acts.appendChild(sel);
         acts.appendChild(mk('gh-hint', 'Hint', useHint));
         acts.appendChild(mk('gh-reveal', 'Reveal', reveal));
         acts.appendChild(mk('gh-quit', 'Put it back', rest));
+
+        var live = html('span', 'gh-say');
+        live.id = 'gh-say';
+        live.setAttribute('role', 'status');
+        live.setAttribute('aria-live', 'polite');
+        stats.appendChild(live);
 
         hud.appendChild(stats);
         hud.appendChild(acts);
@@ -283,28 +342,46 @@
 
     function scatter() {
         var taken = [];
-        var order = pieces.map(function (_, i) { return i; });
-        for (var i = order.length - 1; i > 0; i--) {
-            var j = Math.floor(Math.random() * (i + 1));
-            var t = order[i]; order[i] = order[j]; order[j] = t;
+        // only the pieces in play move; the rest are already home
+        var list = round.slice();
+        var order = list.map(function (_, i) { return i; });
+        var i, j, t;
+        for (i = order.length - 1; i > 0; i--) {
+            j = Math.floor(Math.random() * (i + 1));
+            t = order[i]; order[i] = order[j]; order[j] = t;
         }
+
+        /* Never leave a piece close enough to home to count as placed — that
+           used to hand out free pieces on a narrow board, where the scatter
+           box is small and the old attempt budget ran out. */
+        var floor = Math.max(TOL.easy * 2, MIN_SCATTER);
+
         order.forEach(function (idx) {
-            var p = pieces[idx], l = limits(p);
+            var p = list[idx], l = limits(p);
             var hw = (p.bb[2] - p.bb[0]) / 2, hh = (p.bb[3] - p.bb[1]) / 2;
             var best = null, bestScore = -1;
-            for (var k = 0; k < 90; k++) {
-                var dx = l.loX + Math.random() * Math.max(0, l.hiX - l.loX);
-                var dy = l.loY + Math.random() * Math.max(0, l.hiY - l.loY);
-                if (Math.hypot(dx, dy) < MIN_SCATTER && k < 70) continue;
-                var cx = p.bb[0] + hw + dx, cy = p.bb[1] + hh + dy;
-                var score = Infinity;
-                for (var q = 0; q < taken.length; q++) {
+            var spanX = Math.max(0, l.hiX - l.loX), spanY = Math.max(0, l.hiY - l.loY);
+            // a cramped board cannot honour the full floor; ask for what fits
+            var need = Math.min(floor, Math.max(spanX, spanY) * 0.45);
+            var k, dx, dy, cx, cy, score, q, fx, fy;
+            for (k = 0; k < 120; k++) {
+                dx = l.loX + Math.random() * spanX;
+                dy = l.loY + Math.random() * spanY;
+                if (Math.hypot(dx, dy) < need) continue;
+                cx = p.bb[0] + hw + dx; cy = p.bb[1] + hh + dy;
+                score = Infinity;
+                for (q = 0; q < taken.length; q++) {
                     score = Math.min(score, Math.hypot(cx - taken[q][0], cy - taken[q][1]));
                 }
                 if (score > bestScore) { bestScore = score; best = [dx, dy, cx, cy]; }
                 if (bestScore > 260) break;
             }
-            if (!best) best = [l.loX, l.loY, 0, 0];
+            // nothing satisfied the floor: push to the farthest corner available
+            if (!best) {
+                fx = Math.abs(l.loX) > Math.abs(l.hiX) ? l.loX : l.hiX;
+                fy = Math.abs(l.loY) > Math.abs(l.hiY) ? l.loY : l.hiY;
+                best = [fx, fy, p.bb[0] + hw + fx, p.bb[1] + hh + fy];
+            }
             taken.push([best[2], best[3]]);
             setPos(p, best[0], best[1]);
         });
@@ -314,8 +391,8 @@
     /* ---------- states ---------- */
 
     function stopTimers() {
-        clearInterval(ticker); clearTimeout(hintTimer);
-        ticker = null; startedAt = null; revealed = false; drag = null;
+        clearTimeout(hintTimer); clearTimeout(sayTimer);
+        revealed = false; drag = null;
     }
 
     function rest() {
@@ -329,32 +406,62 @@
         startBtn.hidden = false;
 
         pieces.forEach(function (p) {
+            clearSlot(p);
+            p.occupiedBy = null;
             p.locked = true;
             p.g.classList.add('locked');
+            p.g.classList.remove('wrong', 'reject');
             p.lbl.classList.add('on');
             p.ghost.classList.add('done');
             setPos(p, 0, 0);
         });
+        round = pieces.slice();
         placed = pieces.length;
+        say('');
         setFrame(PAD_REST, true);
     }
 
     function play() {
         stopTimers();
-        placed = 0; hints = 0;
+        placed = 0; hints = 0; misses = 0;
+        asked = null;
         state = 'play';
         mount.classList.remove('gh-idle');
         mount.classList.add('gh-playing');
         startBtn.hidden = true;
         donePanel.hidden = true;
         hud.hidden = false;
+        say('');
 
+        // a short round scatters a random handful; the rest stay home, locked
+        var order = pieces.map(function (_, i) { return i; });
+        var i, j, t;
+        for (i = order.length - 1; i > 0; i--) {
+            j = Math.floor(Math.random() * (i + 1));
+            t = order[i]; order[i] = order[j]; order[j] = t;
+        }
+        var want = roundLen();
+        var chosen = {};
+        order.slice(0, want).forEach(function (idx) { chosen[pieces[idx].id] = true; });
+
+        round = [];
         pieces.forEach(function (p) {
-            p.locked = false;
-            p.g.classList.remove('locked', 'justlocked', 'near');
-            p.lbl.classList.remove('on');
-            p.ghost.classList.remove('done');
-            p.g.setAttribute('aria-label', 'Unplaced region piece');
+            clearSlot(p);
+            p.occupiedBy = null;
+            p.g.classList.remove('justlocked', 'near', 'wrong', 'reject');
+            var inRound = !!chosen[p.id];
+            p.locked = !inRound;
+            p.g.classList.toggle('locked', !inRound);
+            p.lbl.classList.toggle('on', !inRound);
+            p.ghost.classList.toggle('done', !inRound);
+            setPos(p, 0, 0);
+            if (inRound) {
+                round.push(p);
+                p.g.setAttribute('aria-label', 'Unplaced region piece');
+            } else {
+                p.g.setAttribute('aria-label',
+                    p.n + ' Region. Capital: ' + p.c + '. Not in this round.');
+            }
         });
 
         board.classList.toggle('gh-ghosts', level() === 'easy');
@@ -367,24 +474,65 @@
         return s ? s.value : 'normal';
     }
 
-    function fmt(ms) {
-        var s = Math.floor(ms / 1000);
-        return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+    function mode() {
+        var s = document.getElementById('gh-mode');
+        return s ? s.value : 'assemble';
+    }
+
+    function roundLen() {
+        var s = document.getElementById('gh-len');
+        return s && s.value === 'short' ? SHORT_ROUND : pieces.length;
+    }
+
+    /* One-line feedback under the stats, also announced to screen readers.
+       tone: 'good' | 'bad' | 'info' (default). The line carries success,
+       errors and hints alike, so it must not be painted one fixed colour. */
+    function say(msg, tone) {
+        var n = document.getElementById('gh-say');
+        if (!n) return;
+        n.textContent = msg || '';
+        n.className = 'gh-say' + (msg && tone ? ' ' + tone : '');
+        clearTimeout(sayTimer);
+        if (msg) sayTimer = setTimeout(function () {
+            n.textContent = '';
+            n.className = 'gh-say';
+        }, 2600);
     }
 
     function paintHud() {
         var a = document.getElementById('gh-placed');
-        var b = document.getElementById('gh-time');
+        var t = document.getElementById('gh-total');
         var c = document.getElementById('gh-hints');
+        var m = document.getElementById('gh-misses');
         if (a) a.textContent = placed;
-        if (b) b.textContent = fmt(startedAt ? Date.now() - startedAt : 0);
+        if (t) t.textContent = round.length;
         if (c) c.textContent = hints;
+        if (m) m.textContent = misses;
+        paintAsk();
     }
 
-    function startClock() {
-        if (startedAt || state !== 'play') return;
-        startedAt = Date.now();
-        ticker = setInterval(paintHud, 500);
+    /* name-first: pick the next unplaced region and show its name */
+    function paintAsk() {
+        var n = document.getElementById('gh-ask');
+        var left, b;
+        if (!n) return;
+        if (mode() !== 'named' || state !== 'play') {
+            n.hidden = true;
+            asked = null;
+            return;
+        }
+        if (!asked || asked.locked) {
+            left = round.filter(function (p) { return !p.locked; });
+            asked = left.length ? left[Math.floor(Math.random() * left.length)] : null;
+        }
+        n.hidden = !asked;
+        if (asked) {
+            n.textContent = '';
+            n.appendChild(document.createTextNode('place '));
+            b = html('b', null, asked.n.toUpperCase());
+            n.appendChild(b);
+            n.appendChild(document.createTextNode(' · ' + asked.c));
+        }
     }
 
     function flash(p, cls, ms) {
@@ -394,6 +542,7 @@
 
     function lock(p, quiet) {
         if (p.locked) return;
+        clearSlot(p);
         p.locked = true;
         setPos(p, 0, 0);
         p.g.classList.add('locked');
@@ -402,40 +551,56 @@
         p.g.setAttribute('aria-label', p.n + ' Region. Capital: ' + p.c + '. Placed.');
         if (!quiet) flash(p, 'justlocked', 550);
         placed++;
+        if (!quiet) say(p.n + '. Capital ' + p.c + '.', 'good');
         paintHud();
-        if (placed === pieces.length) finish();
+        if (placed === round.length) finish();
     }
 
     function finish() {
-        clearInterval(ticker);
-        ticker = null;
         state = 'done';
-        var elapsed = startedAt ? Date.now() - startedAt : 0;
         var score = document.getElementById('gh-score');
+        var n = round.length;
         if (score) {
             score.textContent = revealed
-                ? 'Revealed — no time recorded.'
-                : 'All sixteen in ' + fmt(elapsed) + ', with ' +
-                  hints + (hints === 1 ? ' hint.' : ' hints.');
+                ? 'Revealed — nothing recorded.'
+                : 'All ' + n + ' placed, with ' +
+                  hints + (hints === 1 ? ' hint and ' : ' hints and ') +
+                  misses + (misses === 1 ? ' misplacement.' : ' misplacements.');
         }
         donePanel.hidden = false;
         paintHud();
     }
 
+    /* A hint is scoped: it lights the target slot for one piece only — the
+       region being asked for, or the one you last touched, or a random one
+       still out. Showing every label at once used to solve the whole board. */
     function useHint() {
         if (state !== 'play') return;
+        var left = round.filter(function (p) { return !p.locked; });
+        if (!left.length) return;
+
+        var p = asked && !asked.locked ? asked
+              : (lastTouched && !lastTouched.locked ? lastTouched
+              : left[Math.floor(Math.random() * left.length)]);
+
         hints++;
         paintHud();
-        board.classList.add('gh-hinting');
+
         clearTimeout(hintTimer);
-        hintTimer = setTimeout(function () { board.classList.remove('gh-hinting'); }, 2600);
+        pieces.forEach(function (q) { q.ghost.classList.remove('lit'); });
+        p.ghost.classList.add('lit');
+        board.classList.add('gh-hinting');
+        say('Highlighted where ' + p.n + ' goes.', 'info');
+        hintTimer = setTimeout(function () {
+            board.classList.remove('gh-hinting');
+            p.ghost.classList.remove('lit');
+        }, 2600);
     }
 
     function reveal() {
         if (state !== 'play') return;
         revealed = true;
-        startClock();
-        pieces.filter(function (p) { return !p.locked; }).forEach(function (p, i) {
+        round.filter(function (p) { return !p.locked; }).forEach(function (p, i) {
             setTimeout(function () { lock(p, true); }, i * 100);
         });
     }
@@ -484,11 +649,137 @@
         return null;
     }
 
+    /* Which region's home is this piece sitting on? A piece is at its own home
+       when its offset is (0,0), so the offset that would take it to region q's
+       home is the gap between their label anchors. Nearest wins, if within
+       tolerance. Returns null when the piece is not over any home. */
+    /* Which region is this piece covering?
+
+       Centroid proximity is no good here: the regions' label anchors are
+       108 units apart at their closest and 337 at their widest, while snap
+       tolerance is 17-46, so a piece dropped squarely over a neighbour was
+       never "near" it by that measure. Judge by where the piece is actually
+       sitting instead — take its centre in map space and find whose home
+       territory that point falls in. */
+    function regionAt(x, y) {
+        for (var i = 0; i < pieces.length; i++) {
+            var q = pieces[i];
+            if (x >= q.bb[0] && x <= q.bb[2] && y >= q.bb[1] && y <= q.bb[3] &&
+                pointInPiece(q, x, y)) {
+                return q;
+            }
+        }
+        return null;
+    }
+
+    // exact hit test against the region's own outline
+    function pointInPiece(q, x, y) {
+        if (!q.hit) {
+            q.hit = defs.querySelector('#gh-' + q.id);
+            if (!q.hit) return false;
+        }
+        if (q.hit.isPointInFill) {
+            try {
+                return q.hit.isPointInFill(new DOMPoint(x, y));
+            } catch (_) { /* older engines want a plain SVGPoint */ }
+        }
+        return false;
+    }
+
+    function homeUnder(p, tol) {
+        // home first: a piece close to its own slot always means that slot
+        var own = Math.hypot(p.dx, p.dy);
+        if (own <= tol) return { target: p, dist: own };
+
+        // otherwise, whichever region the piece's centre is resting on
+        var cx = (p.bb[0] + p.bb[2]) / 2 + p.dx;
+        var cy = (p.bb[1] + p.bb[3]) / 2 + p.dy;
+        var q = regionAt(cx, cy);
+        return q ? { target: q, dist: 0 } : null;
+    }
+
     function settle(p) {
-        var dist = Math.hypot(p.dx, p.dy);
         var tol = TOL[level()];
-        if (dist <= tol) lock(p);
-        else if (dist <= tol * 3.2) flash(p, 'near', 420);
+
+        // name-first: the only correct answer is the region being asked for
+        if (mode() === 'named' && asked && p !== asked) {
+            reject(p, 'That is ' + p.n + '. Place ' + asked.n + '.');
+            return;
+        }
+
+        var hit = homeUnder(p, tol);
+        if (!hit) {
+            if (Math.hypot(p.dx, p.dy) <= tol * 3.2) flash(p, 'near', 420);
+            return;
+        }
+
+        /* Your own slot wins outright: bump whoever is squatting it back out
+           to open space. Without this, a ring of squatters (each sitting on
+           the next one's home) would refuse every piece in turn and leave the
+           player prising the cycle apart one rejection at a time. */
+        if (hit.target === p) {
+            if (p.occupiedBy) evict(p.occupiedBy);
+            lock(p);
+            return;
+        }
+
+        // landed on someone else's home: occupy it, wrong, until dragged out
+        if (hit.target.locked || hit.target.occupiedBy) {
+            reject(p, 'That spot is taken.');
+            return;
+        }
+        misplace(p, hit.target);
+    }
+
+    /* A wrong piece snaps into the slot it claimed and holds it. The slot's
+       real owner cannot be placed until the player drags the impostor out. */
+    function misplace(p, target) {
+        clearSlot(p);
+        p.wrongAt = target;
+        target.occupiedBy = p;
+        // sit centred in the territory it claimed, not on its label anchor:
+        // regions differ enough in size that anchor alignment would throw a
+        // small piece well outside the region it was dropped on
+        var tcx = (target.bb[0] + target.bb[2]) / 2;
+        var tcy = (target.bb[1] + target.bb[3]) / 2;
+        var pcx = (p.bb[0] + p.bb[2]) / 2;
+        var pcy = (p.bb[1] + p.bb[3]) / 2;
+        setPos(p, tcx - pcx, tcy - pcy);
+        p.g.classList.add('wrong');
+        p.g.setAttribute('aria-label',
+            p.n + ' Region, placed wrongly on ' + target.n + '. Drag it away.');
+        misses++;
+        paintHud();
+        say(p.n + ' is not ' + target.n + '.', 'bad');
+    }
+
+    /* Push a squatter out of the slot it was holding, back to somewhere it
+       cannot be mistaken for placed. */
+    function evict(p) {
+        clearSlot(p);
+        var l = limits(p);
+        var fx = Math.abs(l.loX) > Math.abs(l.hiX) ? l.loX : l.hiX;
+        var fy = Math.abs(l.loY) > Math.abs(l.hiY) ? l.loY : l.hiY;
+        setPos(p, fx * 0.8, fy * 0.8);
+        flash(p, 'reject', 420);
+        p.g.setAttribute('aria-label', 'Unplaced region piece');
+    }
+
+    function reject(p, msg) {
+        setPos(p, p.was.dx, p.was.dy);
+        flash(p, 'reject', 420);
+        misses++;
+        paintHud();
+        say(msg, 'bad');
+    }
+
+    // release whatever slot this piece was squatting in
+    function clearSlot(p) {
+        if (p.wrongAt) {
+            if (p.wrongAt.occupiedBy === p) p.wrongAt.occupiedBy = null;
+            p.wrongAt = null;
+        }
+        p.g.classList.remove('wrong');
     }
 
     function endDrag() {
@@ -507,8 +798,11 @@
             if (!g || g.classList.contains('locked')) return;
             var p = byId(g.getAttribute('data-id'));
             if (!p) return;
-            startClock();
             var pt = toSvg(e);
+            // remember where it came from, so a rejected drop can spring back
+            p.was = { dx: p.dx, dy: p.dy };
+            lastTouched = p;
+            clearSlot(p);           // picking it up frees the slot it was in
             drag = { p: p, offX: pt.x - p.dx, offY: pt.y - p.dy };
             g.classList.add('dragging');
             p.lbl.classList.add('dragging');
@@ -539,11 +833,14 @@
                 ArrowUp: [0, -step], ArrowDown: [0, step]
             };
             if (moves[e.key]) {
-                startClock();
+                if (!drag) { p.was = { dx: p.dx, dy: p.dy }; }
+                lastTouched = p;
+                clearSlot(p);
                 setPos(p, p.dx + moves[e.key][0], p.dy + moves[e.key][1]);
                 e.preventDefault();
             } else if (e.key === 'Enter' || e.key === ' ') {
-                startClock();
+                if (!p.was) p.was = { dx: p.dx, dy: p.dy };
+                lastTouched = p;
                 settle(p);
                 e.preventDefault();
             }
@@ -557,7 +854,23 @@
             if (e.target === modal || e.target.closest('.gh-close')) close();
         });
         document.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape' && !modal.hidden) close();
+            if (modal.hidden) return;
+            if (e.key === 'Escape') { close(); return; }
+
+            // keep Tab inside the dialog: aria-modal promises it, so honour it
+            if (e.key !== 'Tab') return;
+            var f = modal.querySelectorAll(
+                'button, select, [href], input, [tabindex]:not([tabindex="-1"])');
+            var list = Array.prototype.filter.call(f, function (n) {
+                return !n.disabled && n.offsetParent !== null;
+            });
+            if (!list.length) return;
+            var first = list[0], last = list[list.length - 1];
+            if (e.shiftKey && document.activeElement === first) {
+                last.focus(); e.preventDefault();
+            } else if (!e.shiftKey && document.activeElement === last) {
+                first.focus(); e.preventDefault();
+            }
         });
 
         var pending = null;
